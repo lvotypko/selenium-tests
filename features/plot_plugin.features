@@ -1,0 +1,76 @@
+Feature: Test Plot plugin
+ 
+  @realupdatecenter
+  Scenario: Install Plot plugin
+    Given a job
+    When I install the "plot" plugin from the update center  
+    And I configure the job
+    Then I should be able to use "Plot build data" post-build action
+  
+
+  @realupdatecenter
+  Scenario: Set plot
+    Given I have installed the "plot" plugin
+    And a job
+    When I configure the job
+    And I add a shell build step "echo 'YVALUE=156' > report.properties"
+    And I add "Plot build data" post-build action
+    And I configure plot group "group"
+    And I configure plot title "title"
+    And I configure plot y-axis label "y-label"
+    And I set properties file type
+    And I confiture date series file "report.properties"
+    And I confiture date series file "YVALUE"
+    And I save the job
+    And I build the job
+    Then the job should have "Plots" action
+
+
+  @realupdatecenter
+  Scenario: Create plot image
+    Given I have installed the "plot" plugin
+    And a job
+    When I configure the job
+    And I add a shell build step "echo 'YVALUE=156' > report.properties"
+    And I add "Plot build data" post-build action
+    And I configure plot group "group"
+    And I configure plot title "title"
+    And I configure plot y-axis label "y-label"
+    And I set properties file type
+    And I confiture date series file "report.properties"
+    And I set data series legend label for properties file "YVALUE"
+    And I save the job
+    And I build the job
+    And I visit job action named "Plots"
+    Then I should see plot image
+
+  @realupdatecenter
+  Scenario: Set too plots with different group
+    Given I have installed the "plot" plugin
+    And a job
+    When I configure the job
+    And I add a shell build step "echo 'YVALUE=156' > report.properties \n echo 'YVALUE=156' > report2.properties"
+    And I add "Plot build data" post-build action
+    And I configure plot group "group"
+    And I configure plot title "title"
+    And I configure plot y-axis label "y-label"
+    And I set properties file type
+    And I confiture date series file "report.properties"
+    And I set data series legend label for properties file "YVALUE"
+    And I add plot
+    And I add "Plot build data" post-build action
+    And I configure plot group "group2"
+    And I configure plot title "title2"
+    And I configure plot y-axis label "y-label2"
+    And I set properties file type
+    And I confiture date series file "report2.properties"
+    And I set data series legend label for properties file "YVALUE"
+    And I save the job
+    And I build the job
+    And I visit job action named "Plots"
+    Then I should see plot with group name "group"
+    And I should see plot with group name "group2"
+
+
+
+
